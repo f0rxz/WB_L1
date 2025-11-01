@@ -9,7 +9,6 @@ import (
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
-
 	go func(ctx context.Context) {
 		for {
 			select {
@@ -37,7 +36,6 @@ func main() {
 	}()
 
 	done := make(chan struct{})
-
 	go func() {
 		for {
 			select {
@@ -57,6 +55,21 @@ func main() {
 		}
 		fmt.Println("goroutine 4 stopped by runtime")
 		runtime.Goexit()
+	}()
+
+	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Duration(time.Second))
+	defer cancel2()
+	go func() {
+		for {
+			select {
+			case <-ctx2.Done():
+				fmt.Println("goroutine 5 stopped by timeout")
+				return
+			default:
+				fmt.Println("goroutine 5")
+				time.Sleep(time.Millisecond * 200)
+			}
+		}
 	}()
 
 	time.Sleep(time.Second * 1)
