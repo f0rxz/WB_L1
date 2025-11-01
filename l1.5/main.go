@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	ch := make(chan int, 2)
+	ch := make(chan int)
 	done := time.After(time.Duration(2 * time.Second))
 
 	go func() {
