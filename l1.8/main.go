@@ -13,6 +13,10 @@ func main() {
 		fmt.Printf("Error scanning i: %v\n", err)
 	}
 	fmt.Printf("You entered: %d\n", i)
+	if i < 1 || i > 64 {
+		fmt.Println("Error: i must be between 1 and 64")
+		return
+	}
 
 	fmt.Printf("%b\n", number^(1<<(i-1)))
 }
