@@ -6,29 +6,28 @@ import (
 )
 
 func main() {
-	ch := make(chan int)
-	done := make(chan struct{})
+	ch := make(chan int, 2)
+	done := time.After(time.Duration(2 * time.Second))
 
 	go func() {
 		defer close(ch)
 		i := 0
+
 		for {
-			select {
-			case <-done:
-				return
-			case ch <- i:
-				i++
-				time.Sleep(300 * time.Millisecond)
-			}
+			ch <- i
+			i++
+			time.Sleep(300 * time.Millisecond)
 		}
 	}()
 
-	go func() {
-		for msg := range ch {
-			fmt.Println(msg)
+	for {
+		select {
+		case <-done:
+			fmt.Println("timeout, exit")
+			return
+		case msg := <-ch:
+			fmt.Println("received:", msg)
 		}
-	}()
+	}
 
-	time.Sleep(time.Second * 2)
-	close(done)
 }
