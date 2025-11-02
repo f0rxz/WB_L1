@@ -7,10 +7,10 @@ import (
 
 func main() {
 	ch := make(chan int)
+	defer close(ch)
 	done := time.After(time.Duration(2 * time.Second))
 
 	go func() {
-		defer close(ch)
 		i := 0
 
 		for {
